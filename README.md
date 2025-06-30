@@ -46,8 +46,10 @@ models:
     model_name: "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
   generation:
     llama_cpp_model_path: "models/mistral-7b-instruct.Q4_K_M.gguf"
-    max_tokens: 256
+    smax_tokens: 256
 ```
+
+*Nota:* para que funcione con este tipo de dataset de preguntas y respuestas, debe ser un modelo tipo instruct
 
 TODO:
 -----
