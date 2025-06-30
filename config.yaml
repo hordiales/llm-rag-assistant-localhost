@@ -1,0 +1,10 @@
+# Configuración del Sistema RAG
+
+# Modelos
+models:
+  embeddings:
+    model_name: "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
+  generation:
+    llama_cpp_model_path: "../models/mistral-7b-instruct.Q4_K_M.gguf"
+    max_tokens: 256
+
