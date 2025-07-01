@@ -35,6 +35,10 @@ Por ejemplo
 ```bash
    wget https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.1-GGUF/resolve/main/mistral-7b-instruct-v0.1.Q4_K_M.gguf -O mistral-7b-instruct.Q4_K_M.gguf
 ```
+
+  Modelo open source, licencia apache 2.0
+  https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.1
+
 4. Construir dataset de preguntas y respuestas
 
 Importante: Guardar en el archivo qa_dataset.json
@@ -54,7 +58,7 @@ Debe tener la siguiente estructura (ejemplo)
 ]
 ```
 
-4. Armar archivo config.yaml configuración del Sistema RAG
+5. Armar archivo config.yaml configuración del Sistema RAG
 
 Por ejemplo
 
