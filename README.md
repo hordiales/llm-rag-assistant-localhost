@@ -35,6 +35,24 @@ Por ejemplo
 ```bash
    wget https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.1-GGUF/resolve/main/mistral-7b-instruct-v0.1.Q4_K_M.gguf -O mistral-7b-instruct.Q4_K_M.gguf
 ```
+4. Construir dataset de preguntas y respuestas
+
+Importante: Guardar en el archivo qa_dataset.json
+
+Debe tener la siguiente estructura (ejemplo)
+```json
+[
+  {
+    "pregunta": "¿Cuál es el horario de atención?",
+    "respuesta": "Nuestro horario de atención es de lunes a viernes de 9:00 a 18:00 horas y sábados de 9:00 a 14:00."
+  },
+  {
+    "pregunta": "¿Cómo puedo contactar con soporte técnico?",
+    "respuesta": "Puede contactar con soporte técnico a través del email soporte@empresa.com, llamando al 900-123-456 o mediante el chat en vivo de nuestra web."
+  },
+  ...
+]
+```
 
 4. Armar archivo config.yaml configuración del Sistema RAG
 
