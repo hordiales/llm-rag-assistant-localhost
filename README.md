@@ -36,6 +36,12 @@ Por ejemplo
    wget https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.1-GGUF/resolve/main/mistral-7b-instruct-v0.1.Q4_K_M.gguf -O mistral-7b-instruct.Q4_K_M.gguf
 ```
 
+Por motivos de seguridad. Validar integridad comparando el resultado del sha256 del archivo descargado, con el que figura en https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.1-GGUF/blob/main/mistral-7b-instruct-v0.1.Q4_K_M.gguf
+
+```bash
+  sha256 mistral-7b-instruct.Q4_K_M.gguf 
+```
+
   Modelo open source, licencia apache 2.0
   https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.1
 
