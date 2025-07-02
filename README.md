@@ -83,6 +83,12 @@ TODO:
 -----
 * Agregar configuración de temperature
 
+## 🧠 Arquitectura del sistema
+
+Este es el flujo general del sistema RAG local:
+
+![Arquitectura RAG](assets/diagrama-es.svg)
+
 Archivos incluidos:
 -------------------
 - prepare_embeddings.py → genera scibot_index.faiss y qa.json a partir de tu dataset
