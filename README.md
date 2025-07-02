@@ -87,7 +87,7 @@ TODO:
 
 Este es el flujo general del sistema RAG local:
 
-![Arquitectura RAG](assets/diagrama-es.svg)
+![Arquitectura RAG](assets/diagram-es.svg)
 
 Archivos incluidos:
 -------------------
