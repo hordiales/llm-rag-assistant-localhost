@@ -4,6 +4,9 @@ BERTScore Evaluation Script for RAG System
 Compares dataset responses with model-generated responses
 """
 
+# por default genera respuestas con el sistema RAG
+# para calcular BERTScore, ejecutar: python bertscore_evaluation.py bertscore
+
 import json
 import random
 import numpy as np
@@ -138,7 +141,8 @@ def main():
     
     print(f"\nResultados guardados en 'evaluation_results.json'")
     print("Para calcular BERTScore, instala: pip install bert-score")
-    print("Luego ejecuta la función de cálculo de BERTScore.")
+    print("Luego ejecuta la función de cálculo de BERTScore: python model_evaluation.py bertscore")
+    print("Para resultados generales, ejecuta: python comprehensive_evaluation.py")
     
     # Display sample results
     print("\n=== Muestra de Resultados ===")
