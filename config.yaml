@@ -6,5 +6,7 @@ models:
     model_name: "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
   generation:
     llama_cpp_model_path: "../models/mistral-7b-instruct.Q4_K_M.gguf"
+    #llama_cpp_model_path: "../models/qwen2.5-1.5b-instruct-q2_k.gguf"
+    #max_tokens: 128
     max_tokens: 256
 
