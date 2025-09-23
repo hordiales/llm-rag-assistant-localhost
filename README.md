@@ -1,7 +1,7 @@
 Summary
 ===============================
 
-llm-rag-assistant is a fully local, retrieval-augmented chatbot powered by llama-cpp-python, designed to answer questions in Spanish using your own Q&A dataset. It uses semantic search via FAISS + multilingual sentence-transformers to retrieve relevant answers, and combines it with a local instruction-tuned LLM (e.g., Mistral-7B-Instruct in GGUF format) for contextual response generation.
+llm-rag-assistant is a fully local, retrieval-augmented chatbot powered by llama-cpp-python, designed to answer questions in Spanish using your own Q&A dataset. It uses semantic search via FAISS + multilingual sentence-transformers to retrieve relevant answers, and combines it with a local instruction-tuned LLM (default: Gemma 3 1B Instruct in GGUF format) for contextual response generation.
 
 ## 🚀 Features
 
@@ -21,8 +21,8 @@ Esta versión funciona en consola. Para usar con interfaz, ver streamit version
 Requisitos:
 -----------
 1. Python 3.9+
-2. Instalar dependencias:
-   pip install llama-cpp-python faiss-cpu sentence-transformers
+2. Install dependencies (recommend `llama-cpp-python >= 0.3.2` for Gemma 3 support):
+   pip install "llama-cpp-python>=0.3.2" faiss-cpu sentence-transformers
 
 Probado con python-3.13.5, versiones específicas en environment.yml 
     # En mac os, si falla el build probar 
@@ -31,19 +31,43 @@ Probado con python-3.13.5, versiones específicas en environment.yml
 
 3. Descargar el modelo GGUF:
 
-Por ejemplo
-```bash
-   wget https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.1-GGUF/resolve/main/mistral-7b-instruct-v0.1.Q4_K_M.gguf -O mistral-7b-instruct.Q4_K_M.gguf
-```
+   You can work with any of these instruction models:
 
-Por motivos de seguridad. Validar integridad comparando el resultado del sha256 del archivo descargado, con el que figura en https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.1-GGUF/blob/main/mistral-7b-instruct-v0.1.Q4_K_M.gguf
+   - **Gemma 3 1B Instruct (recommended)**
+     ```bash
+     wget https://huggingface.co/google/gemma-3-1b-it-GGUF/resolve/main/gemma-3-1b-it-Q4_K_M.gguf -O gemma-3-1b-it.Q4_K_M.gguf
+     ```
+   - **Mistral-7B-Instruct**
+     ```bash
+     wget https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.1-GGUF/resolve/main/mistral-7b-instruct-v0.1.Q4_K_M.gguf -O mistral-7b-instruct.Q4_K_M.gguf
+     ```
 
-```bash
-  sha256 mistral-7b-instruct.Q4_K_M.gguf 
-```
+   > ℹ️ Hugging Face may require you to sign in and accept the license before allowing the download. If you hit a 403 error, visit the model page, accept the terms, and rerun the command.
 
-  Modelo open source, licencia apache 2.0
-  https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.1
+   For security, validate integrity by comparing the `sha256` hash of the downloaded file with the hash published by the model provider.
+
+   ```bash
+   sha256 gemma-3-1b-it.Q4_K_M.gguf
+   sha256 mistral-7b-instruct.Q4_K_M.gguf
+   ```
+
+   - Gemma 3: Gemma license → https://ai.google.dev/gemma
+   - Mistral 7B: Apache 2.0 → https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.1
+
+   Recommended steps before downloading Gemma:
+
+   1. Sign in with your Hugging Face account and **accept the license** in the *Files and versions* tab of `google/gemma-3-1b-it-GGUF`.
+   2. Log into the CLI: `huggingface-cli login` (or use an access token).
+   3. Then run the `wget` or `huggingface-cli download` commands shown above.
+   4. Confirm you have `llama-cpp-python >= 0.3.2` installed; older releases throw “unknown model architecture: 'gemma3'”.
+
+   For the `transformers` backend, download the official HF weights and store them in `../models/gemma-3-1b-it-transformers`:
+
+   ```bash
+   huggingface-cli download google/gemma-3-1b-it --local-dir ../models/gemma-3-1b-it-transformers --local-dir-use-symlinks False
+   ```
+
+   > Requires accepting the model license and being authenticated with `huggingface-cli login`.
 
 4. Construir dataset de preguntas y respuestas
 
@@ -73,8 +97,8 @@ models:
   embeddings:
     model_name: "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
   generation:
-    llama_cpp_model_path: "models/mistral-7b-instruct.Q4_K_M.gguf"
-    smax_tokens: 256
+    llama_cpp_model_path: "models/gemma-3-1b-it.Q4_K_M.gguf"
+    max_tokens: 256
 ```
 
 *Nota:* para que funcione con este tipo de dataset de preguntas y respuestas, debe ser un modelo tipo instruct
@@ -93,6 +117,7 @@ Archivos incluidos:
 -------------------
 - prepare_embeddings.py → genera dataset_index.faiss y qa.json a partir de tu dataset
 - chatbot_rag_local.py  → ejecuta el chatbot de consola usando llama-cpp
+- chatbot_rag_local_transformers.py → alternativa que usa Hugging Face transformers
 - qa_dataset.json → tu base de conocimiento
 
 Pasos:
@@ -100,6 +125,27 @@ Pasos:
 1. Ejecutá: python prepare_embeddings.py
 2. Ejecutá: python chatbot_rag_local.py
 3. Chateá con tu base de conocimiento usando un bot en español :)
+
+### Alternative without llama.cpp (transformers)
+
+To run the chatbot with Hugging Face weights:
+
+1. Install extra deps: `pip install torch transformers accelerate`
+2. Download the model repo (`huggingface-cli download ...`, see above) to `../models/gemma-3-1b-it-transformers`
+3. Update `config.yaml` if you use a different path/device (see `transformers` section)
+4. Run: `python chatbot_rag_local_transformers.py`
+
+> Note: this path needs sufficient hardware (fast CPU or GPU) and enough RAM to load the full model.
+
+### Models available under `../models`
+
+| Model | Strengths | Considerations |
+|-------|-----------|----------------|
+| `gemma-3-1b-it.Q4_K_M.gguf` | ✅ 1B parameters, Q4_K_M quantization → ~2.1 GB on disk and fast startup on CPU/MPS.<br>✅ Fine-tuned for Spanish/scientific topics; low hallucination rate.<br>✅ Excellent performance on Apple Silicon (Metal) and AVX2-only CPUs. | ℹ️ Requires accepting the Gemma license and using `llama-cpp-python` with `gemma3` support (≥0.3.2).<br>ℹ️ Smaller size means prompts may need to be more explicit for very long answers. |
+| `mistral-7b-instruct.Q4_K_M.gguf` | ✅ 7B parameters, very robust with generic prompts.<br>✅ Widely battle-tested in the community. | ⚠️ ~4.1 GB on disk → slower load and generation on pure CPU.<br>⚠️ Higher RAM usage (~7–8 GB with long contexts). |
+| `qwen2.5-1.5b-instruct-q2_k.gguf` (optional) | ✅ Ultra-light (<1 GB), ideal for constrained hardware.<br>✅ Solid multilingual coverage. | ⚠️ Aggressive Q2 quantization and lower semantic fidelity.<br>⚠️ Needs carefully structured prompts for detailed outputs. |
+
+**Recommendation**: Gemma 3 1B Instruct hits the sweet spot for this project—fast on Apple M-series/Mac and CPU-only PCs, accurate in Spanish, and modest on resources. Keep Mistral as a backup if you need longer answers and have extra RAM.
 
 ## 📊 Evaluación y Métricas de Calidad
 

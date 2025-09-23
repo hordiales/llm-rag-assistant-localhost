@@ -5,8 +5,16 @@ models:
   embeddings:
     model_name: "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
   generation:
+    #llama_cpp_model_path: "../models/gemma-3-1b-it-q4_k_m.gguf"
     llama_cpp_model_path: "../models/mistral-7b-instruct.Q4_K_M.gguf"
     #llama_cpp_model_path: "../models/qwen2.5-1.5b-instruct-q2_k.gguf"
     #max_tokens: 128
     max_tokens: 256
 
+transformers:
+  model_id: "../models/gemma-3-1b-it-transformers"
+  device: "cpu"
+  dtype: "float32"
+  max_new_tokens: 256
+  temperature: 0.0
+  top_p: 0.9

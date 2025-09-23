@@ -28,11 +28,13 @@ while True:
     if user_input.lower() in ["salir", "exit"]: break
     pregunta_similar, respuesta_contexto = buscar_contexto(user_input)
 
-    prompt = f"""[INST] Eres un asistente. Un usuario pregunta: "{user_input}".
-Basándote en este conocimiento previo:
-Pregunta previa: "{pregunta_similar}"
-Respuesta: "{respuesta_contexto}"
-Responde en español de forma clara y precisa. [/INST]"""
+    prompt = (
+        "Responde en español usando únicamente la información del contexto.\n"
+        "Si el contexto no alcanza, dilo explícitamente y pide más datos.\n\n"
+        f"Contexto:\n- Pregunta base: {pregunta_similar}\n- Respuesta asociada: {respuesta_contexto}\n\n"
+        f"Pregunta: {user_input}\n"
+        "Respuesta (solo texto en español):"
+    )
 
     output = llm(prompt, max_tokens=max_tokens)
     print("\nBot:", output["choices"][0]["text"].strip(), "\n")
