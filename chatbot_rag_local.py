@@ -1,6 +1,7 @@
 from llama_cpp import Llama
 from sentence_transformers import SentenceTransformer
 import faiss, json, numpy as np, yaml
+from pathlib import Path
 
 index = faiss.read_index("dataset_index.faiss")
 with open("qa.json", "r", encoding="utf-8") as f:
@@ -20,6 +21,11 @@ def buscar_contexto(pregunta):
     _, I = index.search(np.array(emb).astype(np.float32), 1)
     return db["questions"][I[0][0]], db["answers"][I[0][0]]
 
+print(
+    "Modelos cargados → "
+    f"Embeddings: {embedder_model_name} | "
+    f"LLM: {Path(llama_model_path).name if llama_model_path else llama_model_path}"
+)
 print("""🤖 Bienvenido al chatbot con RAG local 
 Escribí tu pregunta (o 'salir'):
 """)
@@ -30,10 +36,10 @@ while True:
 
     prompt = (
         "Responde en español usando únicamente la información del contexto.\n"
-        "Si el contexto no alcanza, dilo explícitamente y pide más datos.\n\n"
+        "No repitas estas instrucciones ni el contexto; si falta información, dilo y pide más datos.\n\n"
         f"Contexto:\n- Pregunta base: {pregunta_similar}\n- Respuesta asociada: {respuesta_contexto}\n\n"
         f"Pregunta: {user_input}\n"
-        "Respuesta (solo texto en español):"
+        "Respuesta:"
     )
 
     output = llm(prompt, max_tokens=max_tokens)

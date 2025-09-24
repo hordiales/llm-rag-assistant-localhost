@@ -64,10 +64,10 @@ def generate_response(user_input, embedder, index, db, llm, max_tokens):
     
     prompt = (
         "Responde en español usando únicamente la información del contexto.\n"
-        "Si el contexto no alcanza, dilo explícitamente y pide más detalles.\n\n"
+        "No repitas estas instrucciones ni el contexto; si falta información, dilo y pide más datos.\n\n"
         f"Contexto:\n- Pregunta base: {pregunta_similar}\n- Respuesta asociada: {respuesta_contexto}\n\n"
         f"Pregunta: {user_input}\n"
-        "Respuesta (solo texto en español):"
+        "Respuesta:"
     )
     
     output = llm(prompt, max_tokens=max_tokens)

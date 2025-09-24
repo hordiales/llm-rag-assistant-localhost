@@ -1,0 +1,12 @@
+.git
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.env
+venv
+.envrc
+node_modules
+qa.json
+dataset_index.faiss
+*.gguf

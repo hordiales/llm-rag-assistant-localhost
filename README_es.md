@@ -3,6 +3,26 @@ Resumen
 
 llm-rag-assistant es un chatbot RAG totalmente local basado en llama-cpp-python. Responde preguntas en español usando tu propio dataset de Q&A: FAISS + sentence-transformers multilingües recuperan el contexto relevante y un LLM tipo instruct (por defecto: Gemma 3 1B Instruct en formato GGUF) genera la respuesta.
 
+Versiones probadas
+-------------------
+| Componente | Versión |
+|------------|---------|
+| Python | 3.10.14 |
+| llama-cpp-python | 0.3.5 |
+| faiss-cpu | 1.7.4 |
+| sentence-transformers | 2.7.0 |
+| torch (CPU) | 2.2.0 |
+| transformers | 4.36.2 |
+| accelerate | 0.26.0 |
+| scikit-learn | 1.4.2 |
+| numpy | 1.26.4 |
+| scipy | 1.11.4 |
+| bert-score | 0.3.13 |
+| rouge-score | 0.1.2 |
+| nltk | 3.8.1 |
+
+> Todas las dependencias Python están fijas en `requirements.txt` para garantizar reproducibilidad.
+
 ## 🚀 Características
 
 - 🔍 Búsqueda semántica con sentence-transformers multilingües
@@ -19,7 +39,7 @@ Este repositorio incluye un chatbot RAG de consola que corre completamente offli
 Requisitos
 ----------
 1. Python 3.9+
-2. Instala dependencias (recomendado `llama-cpp-python >= 0.3.2` para soporte Gemma 3):
+2. Instala dependencias (recomendado `llama-cpp-python >= 0.3.5` para soporte Gemma 3):
    ```bash
    pip install "llama-cpp-python>=0.3.2" faiss-cpu sentence-transformers
    ```
@@ -55,7 +75,7 @@ Requisitos
    1. Inicia sesión en Hugging Face y **acepta la licencia** en la pestaña *Files and versions* de `google/gemma-3-1b-it-GGUF`.
    2. Haz login en la CLI: `huggingface-cli login` (o token de acceso).
    3. Ejecuta los comandos `wget`/`huggingface-cli download` anteriores.
-   4. Confirma que tienes `llama-cpp-python >= 0.3.2`; versiones previas lanzan “unknown model architecture: 'gemma3'”.
+   4. Confirma que tienes `llama-cpp-python >= 0.3.5`; versiones previas lanzan “unknown model architecture: 'gemma3'”.
 
    Backend `transformers` (opcional):
    ```bash
@@ -100,6 +120,28 @@ Uso
 1. `python prepare_embeddings.py`
 2. `python chatbot_rag_local.py`
 3. Chatea en español con tu base de conocimiento :)
+
+Docker
+------
+Construye la imagen desde la raíz del repositorio:
+```bash
+docker build -t llm-rag-assistant .
+```
+
+Ejecuta el bot de consola montando tu carpeta de modelos GGUF para que el contenedor resuelva `../models/...`:
+```bash
+docker run --rm -it \
+  -v $(pwd)/../models:/models \
+  llm-rag-assistant
+```
+
+También puedes sobreescribir el comando por defecto para lanzar otros flujos, por ejemplo:
+```bash
+docker run --rm -it \
+  -v $(pwd)/../models:/models \
+  llm-rag-assistant \
+  python model_evaluation.py bertscore
+```
 
 Alternativa sin llama.cpp (transformers)
 ---------------------------------------

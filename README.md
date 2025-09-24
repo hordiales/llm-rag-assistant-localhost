@@ -5,6 +5,26 @@ llm-rag-assistant is a fully local, retrieval-augmented chatbot powered by llama
 
 > Looking for the Spanish version? See `README_es.md`.
 
+Tested versions
+----------------
+| Component | Version |
+|-----------|---------|
+| Python | 3.10.14 |
+| llama-cpp-python | 0.3.5 |
+| faiss-cpu | 1.7.4 |
+| sentence-transformers | 2.7.0 |
+| torch (CPU) | 2.2.0 |
+| transformers | 4.36.2 |
+| accelerate | 0.26.0 |
+| scikit-learn | 1.4.2 |
+| numpy | 1.26.4 |
+| scipy | 1.11.4 |
+| bert-score | 0.3.13 |
+| rouge-score | 0.1.2 |
+| nltk | 3.8.1 |
+
+> All Python dependencies are pinned in `requirements.txt` for reproducibility.
+
 ## 🚀 Features
 
 - 🔍 Semantic search with multilingual sentence-transformers
@@ -21,9 +41,9 @@ This repository ships a console-based RAG chatbot that runs entirely offline.
 Requirements
 ------------
 1. Python 3.9+
-2. Install dependencies (recommend `llama-cpp-python >= 0.3.2` for Gemma 3 support):
+2. Install dependencies (recommend `llama-cpp-python >= 0.3.5` for Gemma 3 support):
    ```bash
-   pip install "llama-cpp-python>=0.3.2" faiss-cpu sentence-transformers
+   pip install "llama-cpp-python>=0.3.5" faiss-cpu sentence-transformers
    ```
    On macOS you can fall back to conda if compilation fails:
    ```bash
@@ -57,7 +77,7 @@ Requirements
    1. Sign in with your Hugging Face account and **accept the license** in the *Files and versions* tab of `google/gemma-3-1b-it-GGUF`.
    2. Log into the CLI: `huggingface-cli login` (or use an access token).
    3. Run the `wget`/`huggingface-cli download` commands above.
-   4. Confirm `llama-cpp-python >= 0.3.2`; older releases throw “unknown model architecture: 'gemma3'”.
+   4. Confirm `llama-cpp-python >= 0.3.5`; older releases throw “unknown model architecture: 'gemma3'”.
 
    Transformers backend (optional):
    ```bash
@@ -102,6 +122,28 @@ Usage
 1. `python prepare_embeddings.py`
 2. `python chatbot_rag_local.py`
 3. Chat with your knowledge base in Spanish :)
+
+Docker
+------
+Build the image from the repository root:
+```bash
+docker build -t llm-rag-assistant .
+```
+
+Run the console bot, mounting your local GGUF directory so `/app` can resolve `../models/...`:
+```bash
+docker run --rm -it \
+  -v $(pwd)/../models:/models \
+  llm-rag-assistant
+```
+
+Override the default command to run other workflows when needed:
+```bash
+docker run --rm -it \
+  -v $(pwd)/../models:/models \
+  llm-rag-assistant \
+  python model_evaluation.py bertscore
+```
 
 Alternative without llama.cpp (transformers)
 -------------------------------------------
