@@ -12,3 +12,5 @@ sentence-transformers==2.7.0
 sentencepiece==0.1.99
 tqdm==4.66.1
 transformers==4.36.2
+dspy-ai
+pandas
